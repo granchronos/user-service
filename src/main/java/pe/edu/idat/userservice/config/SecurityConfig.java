@@ -136,7 +136,9 @@ public class SecurityConfig {
 
     @Bean
     public AuthorizationServerSettings authorizationServerSettings() {
-        return AuthorizationServerSettings.builder().build();
+        return AuthorizationServerSettings.builder()
+                .issuer("https://user-service-production-15c3.up.railway.app")
+                .build();
     }
 
     @Bean
