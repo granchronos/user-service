@@ -86,6 +86,8 @@ public class SecurityConfig {
                 .postLogoutRedirectUri("http://127.0.0.1:8080/")
                 .scope(OidcScopes.OPENID)
                 .scope(OidcScopes.PROFILE)
+                .scope("read")
+                .scope("write")
                 .build();
 
         return new InMemoryRegisteredClientRepository(oidcClient);
