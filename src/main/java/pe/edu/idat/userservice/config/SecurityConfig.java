@@ -86,14 +86,30 @@ public class SecurityConfig {
                 .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
                 .redirectUri("https://oauthdebugger.com/debug")
                 .tokenSettings(tokenSettings())
-                .postLogoutRedirectUri("http://127.0.0.1:8080/")
+                .postLogoutRedirectUri("https://127.0.0.1:8080/")
                 .scope(OidcScopes.OPENID)
                 .scope(OidcScopes.PROFILE)
                 .scope("read")
                 .scope("write")
                 .build();
 
-        return new InMemoryRegisteredClientRepository(oidcClient);
+        RegisteredClient oauthClient = RegisteredClient.withId(UUID.randomUUID().toString())
+                .clientId("oauth-client")
+                .clientSecret(passwordEncoder().encode("12345678910"))
+                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
+                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+                .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
+                .redirectUri("https://oauth-client-production.up.railway.app/login/oauth2/code/oauth-client")
+                .redirectUri("https://oauth-client-production.up.railway.app/authorized")
+                .tokenSettings(tokenSettings())
+                .postLogoutRedirectUri("https://oauth-client-production.up.railway.app/logout")
+                .scope(OidcScopes.OPENID)
+                .scope(OidcScopes.PROFILE)
+                .scope("read")
+                .scope("write")
+                .build();
+
+        return new InMemoryRegisteredClientRepository(oidcClient, oauthClient);
     }
 
     @Bean
@@ -137,7 +153,6 @@ public class SecurityConfig {
     @Bean
     public AuthorizationServerSettings authorizationServerSettings() {
         return AuthorizationServerSettings.builder()
-                .issuer("https://user-service-production-15c3.up.railway.app")
                 .build();
     }
 
